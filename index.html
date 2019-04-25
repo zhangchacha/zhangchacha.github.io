@@ -315,6 +315,230 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/24/进程and线程/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ying">
+      <meta itemprop="description" content="Long Long ago">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/24/进程and线程/" class="post-title-link" itemprop="http://yoursite.com/index.html">进程and线程</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-24 16:46:58" itemprop="dateCreated datePublished" datetime="2019-04-24T16:46:58+08:00">2019-04-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-25 10:46:21" itemprop="dateModified" datetime="2019-04-25T10:46:21+08:00">2019-04-25</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/24/进程and线程/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/04/24/进程and线程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/04/24/进程and线程/" class="leancloud_visitors" data-flag-title="进程and线程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>因为面试被问了两次进程和线程的区别，所以决定还是仔细的看一看，写下来可能会对以后有帮助。</p>
+<h3 id="定义上的区别"><a href="#定义上的区别" class="headerlink" title="定义上的区别"></a>定义上的区别</h3><p>在之前，我对进程和线程的理解就是，进程是线程的高一级的结构。一个程序是一段代码，运行一次这个程序叫做开始一个进程，在这个程序里可能有很多不同的逻辑，分别执行不同的代码块，每一个执行的代码块叫做线程。</p>
+<p>这大致就是进程和线程的关系。本着偷懒的思想，我其实是想说他们俩没多大区别，就是层次不一样，但是感觉面试的时候这么说回去不太好。</p>
+<p>遂搜索之，网上的说法纷繁复杂，看了一会也没看出个所以然来，好像大家都没有形成一种固定的说法，就像一道开放式问题一样。这里简单写一下被大多数人认同的部分吧。</p>
+<p>部分文字来自<a href="https://www.zhihu.com/question/25532384" target="_blank" rel="noopener">知乎</a>。<br>部分文字来自<a href="https://blog.csdn.net/fly_yr/article/details/50970198" target="_blank" rel="noopener">CSDN</a></p>
+<p>首先是缘由。</p>
+<p>CPU的速度很快，快到其他的东西都跟不上它的速度。道理也很简单，当时在做五段流水CPU的时候就发现，CPU的大部分工作是通过物理学电路完成的。<del>这部分工作理论上以电子速度执行（误）</del>。但是其他部分就比较麻烦，比如内存的寻址，L1，L2缓存，甚至是磁盘的转动，都很消耗时间。那怎么办呢？既然你CPU很快，那你就同时服务多个程序吧。这就是并行概念。</p>
+<p>CPU在不同的时间处理不同的程序，每个程序叫做一个进程。但是程序肯定不能只有CPU就能完成任务了，之前说的存储，还有需要的信息，标识等东西都要有才行。这些东西叫做上下文。不同的进程有不同的上下文，如果CPU时间配额用完了，必须要等到下一次CPU，就要把上下文存储起来。因此一个进程大体上可以分三个步骤，读取上下文，计算，保存上下文。</p>
+<p>线程的概念在一开始并不是一个必须的概念，<strong>在一个进程中</strong>，可能有不同的执行逻辑，比如烧水，洗澡，睡觉，玩游戏等等。这些被细分成多个线程，并没有什么原因，根据运行逻辑划分线程，不同的代码块被分为不同的线程，但是他们还是在一个进程中，因此，线程确实是进程的子概念。</p>
+<p>我们看到，进程有上下文，线程没有，因此，进程是资源调度的单位，而线程是CPU调度的单位。这可能是他们俩最大的区别。</p>
+<p>需要注意的是，在单CPU（单核）场景下，所有的进程/线程本质上都是串行执行的。不同的线程通过时间片的切换完成“同时”处理，不同的进程也是通过时间片的调度完成看似同时的处理。因为CPU真的很快，所以并发看起来很像并行。只有在多CPU的场景下，真正的并行才得以实现。</p>
+<h3 id="其他方面的区别"><a href="#其他方面的区别" class="headerlink" title="其他方面的区别"></a>其他方面的区别</h3><p>进程和线程的另外的区别应该在于他们的可选通信方式不同。这个问题也是被问的比较多的。</p>
+<h6 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h6><p>首先通信这个概念的话，主要是对于进程来说的。因为不同的进程使用的内存不同，甚至，因为虚拟地址的存在，在不同进程中地址相同的两个量指向的也是不同的实际内存。这就导致了如果两个进程需要交换信息的话，他们必须通过操作系统进行通信。主要的方法有如下：</p>
+<ol>
+<li><p>信号</p>
+<p>信号是对中断的一种模拟，用于通知进程有某个事件发生。暂时不了解。</p>
+</li>
+<li><p>信号量</p>
+<p>常用于对临界资源的访问问题。信号量对应的是PV操作，信号量大于0表示可以被并发访问的进程数量，信号量小于0的时候，表示因为资源不足被挂起的进程数量。每个进程获取到资源之后对信号量-1，完成之后+1。</p>
+</li>
+<li><p>管道</p>
+<p>管道是一种半双工（两边都能走，但是不能两边同时走）的工作模式，管道一般用于父子进程或兄弟进程之间通信。<br>管道传输的是无格式的流，所以两进程通信时必须约定好数据通信的格式。管道它就像一个特殊的文件，但这个文件之存在于内存中，在创建管道时，系统为管道分配了一个页面作为数据缓冲区，进程对这个数据缓冲区进行读写，以此来完成通信。其中一个进程只能读一个只能写，所以叫半双工通信，为什么一个只能读一个只能写呢?因为写进程是在缓冲区的末尾写入，读进程是在缓冲区的头部读取，他们各自 的数据结构不同，所以功能不同。</p>
+</li>
+<li><p>命名管道</p>
+<p>命名管道有管道的所有特点，同时，因为有名字，所以可以被不同的进程使用，并不局限于父子进城。</p>
+</li>
+<li><p>消息队列</p>
+<p>消息队列是存放在内核中的消息链表，每个消息队列由消息队列标识符标识，于管道不同的是，消息队列存放在内核中，只有在内核重启时才能删除一个消息队列，内核重启也就是系统重启，同样消息队列的大小也是受限制的。</p>
+</li>
+<li><p>共享内存</p>
+<p>为了达到更好的通信效果，接近于进程内部的通信，可以使用共享内存方案。共享内存是最快的进程间通信方式。共享内存的使用方式是将一块内存同时映射到不同进程的内存空间中，这样不同的进程就可以同时访问这一块内存，达到通信的目的。同时因为可以同时访问内存，需要注意两个进程的同步机制。具体方法和线程间同步差不多。进程在共享内存时，一直持有共享映射直到通信完毕为止。</p>
+</li>
+<li><p>套接字</p>
+<p>用于不同主机之间的进程通信。可能需要网络参与。</p>
+</li>
+</ol>
+<p>管道速度慢，消息队列容量受限。信号量只能同步，不能传复杂消息。共享内存需要同步开销。</p>
+<h6 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h6><ol>
+<li><p>锁：互斥锁，条件变量，读写锁</p>
+<p>互斥锁提供了以排他方式防止数据结构被并发修改的方法。</p>
+<p>使用条件变量可以以原子的方式阻塞进程，直到某个特定条件为真为止。对条件的测试是在互斥锁的保护下进行的。条件变量始终与互斥锁一起使用。</p>
+<p>读写锁允许多个线程同时读共享数据，而对写操作是互斥的。</p>
+</li>
+<li><p>信号</p>
+</li>
+<li><p>信号量</p>
+</li>
+</ol>
+<p>线程同步的问题很直接，方法也很直接，这里就不赘述了。</p>
+<p>To be continued。。。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/19/IDM相关/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1815,175 +2039,6 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/01/10/年少有为/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-         
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-       
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/08/由院系调整想到的/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ying">
-      <meta itemprop="description" content="Long Long ago">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cha">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/01/08/由院系调整想到的/" class="post-title-link" itemprop="http://yoursite.com/index.html">由院系调整想到的</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-01-08 15:46:08 / 修改时间：16:44:53" itemprop="dateCreated datePublished" datetime="2019-01-08T15:46:08+08:00">2019-01-08</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/08/由院系调整想到的/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/08/由院系调整想到的/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/01/08/由院系调整想到的/" class="leancloud_visitors" data-flag-title="由院系调整想到的">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>因为茶茶的随口吐槽，说为什么河南没有好大学，我就去翻了一下河南大学的历史沿革。然后觉得不过瘾，又多翻了一些，看了看1952年那一批院系调整的全貌。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/01/08/由院系调整想到的/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
