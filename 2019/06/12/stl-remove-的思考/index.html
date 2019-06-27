@@ -117,17 +117,17 @@
 
 
 
-  <meta name="description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。 12345678910vector&amp;lt;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt;&amp;gt; tmp_adj;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt; adeg;unsigned int i;for (auto &amp;amp; m: tmp_adj)">
+  <meta name="description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="stl remove 的思考">
 <meta property="og:url" content="http://yoursite.com/2019/06/12/stl-remove-的思考/index.html">
 <meta property="og:site_name" content="Cha">
-<meta property="og:description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。 12345678910vector&amp;lt;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt;&amp;gt; tmp_adj;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt; adeg;unsigned int i;for (auto &amp;amp; m: tmp_adj)">
+<meta property="og:description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-13T08:34:35.277Z">
+<meta property="og:updated_time" content="2019-06-27T11:28:32.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="stl remove 的思考">
-<meta name="twitter:description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。 12345678910vector&amp;lt;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt;&amp;gt; tmp_adj;vector&amp;lt;pair&amp;lt;uint32_t, bool&amp;gt;&amp;gt; adeg;unsigned int i;for (auto &amp;amp; m: tmp_adj)">
+<meta name="twitter:description" content="某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。">
 
 
 
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-13 16:34:35" itemprop="dateModified" datetime="2019-06-13T16:34:35+08:00">2019-06-13</time>
+                <time title="修改时间：2019-06-27 19:28:32" itemprop="dateModified" datetime="2019-06-27T19:28:32+08:00">2019-06-27</time>
               
             
           </span>
@@ -429,6 +429,7 @@
 
       
         <p>某天帮别人写代码的时候，写了一个std::remove，说是类型不匹配。</p>
+<a id="more"></a>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">bool</span>&gt;&gt;&gt; tmp_adj;</span><br><span class="line"><span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">bool</span>&gt;&gt; adeg;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> &amp; m: tmp_adj) &#123;</span><br><span class="line">  <span class="comment">////  ERROR, should use std::remove_if() .</span></span><br><span class="line">  m.erase(<span class="built_in">std</span>::remove(m.begin(), m.end(), </span><br><span class="line">  [&amp;](<span class="keyword">const</span> <span class="built_in">std</span>::pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">bool</span>&gt; &amp; a)&#123;<span class="keyword">return</span> a.first == adeg[i].first;&#125;), </span><br><span class="line">  m.end());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译的时候总是提示<code>std::pair</code>和<code>lambda&lt;std::pair&gt;</code>类型不同。开始总以为是在lambda中的参数被加了什么奇怪的装饰导致无法自动类型转换，但是尝试更改了一下lambda中的<code>return</code>语句之后发现并没有什么改变。于是翻阅<a href="https://zh.cppreference.com/w/cpp/algorithm/remove" target="_blank" rel="noopener">资料</a>，得知原来remove方法只能用来‘移除’容器中的指定值，即满足<code>==</code>方法的元素，如果想要通过函数来判断是否移除的话，需要使用<code>remove_if</code>方法。</p>
 <p>听别人说过一句话，如果c++中有什么是他规定了的话，那他一定有他这么规定的理由。稍加思索便觉得，这里必须要用一个<code>remove_if</code>方法，而不能用<code>remove</code>方法重载。因为容器中的元素也可能是一个lambda表达式对象，或者一个函数对象，如果我们使用容器存储一个函数对象的话，那么我们如果想移除某个特定的对象，使用<code>remove</code>就不会造成歧义。而如果使用<code>remove</code>重载现在的<code>remove_if</code>，则有可能编译器不知道你是想要删除一个对象还是想要根据这个lambda的语义删除一些对象。</p>
