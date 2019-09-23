@@ -117,25 +117,25 @@
 
 
 
-  <meta name="description" content="先说自己现在的理解，然后去查资料补上来。">
+  <meta name="description" content="new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。">
 <meta name="keywords" content="面试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="被面试官怼自闭之一：动态链接库和静态链接库">
-<meta property="og:url" content="http://yoursite.com/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/index.html">
+<meta property="og:title" content="被面试官怼自闭之二：new发生了什么">
+<meta property="og:url" content="http://yoursite.com/2019/09/22/被面试官怼自闭之二：new发生了什么/index.html">
 <meta property="og:site_name" content="Cha">
-<meta property="og:description" content="先说自己现在的理解，然后去查资料补上来。">
+<meta property="og:description" content="new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-22T05:04:29.129Z">
+<meta property="og:updated_time" content="2019-09-22T13:51:43.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="被面试官怼自闭之一：动态链接库和静态链接库">
-<meta name="twitter:description" content="先说自己现在的理解，然后去查资料补上来。">
+<meta name="twitter:title" content="被面试官怼自闭之二：new发生了什么">
+<meta name="twitter:description" content="new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/22/被面试官怼自闭之二：new发生了什么/">
 
 
 
@@ -145,7 +145,7 @@
   };
 </script>
 
-  <title>被面试官怼自闭之一：动态链接库和静态链接库 | Cha</title>
+  <title>被面试官怼自闭之二：new发生了什么 | Cha</title>
   
 
 
@@ -316,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/被面试官怼自闭之二：new发生了什么/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ying">
@@ -333,7 +333,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">被面试官怼自闭之一：动态链接库和静态链接库
+          <h1 class="post-title" itemprop="name headline">被面试官怼自闭之二：new发生了什么
               
             
           </h1>
@@ -358,7 +358,7 @@
                 
               
 
-              <time title="创建时间：2019-09-22 12:27:40 / 修改时间：13:04:29" itemprop="dateCreated datePublished" datetime="2019-09-22T12:27:40+08:00">2019-09-22</time>
+              <time title="创建时间：2019-09-22 13:05:36 / 修改时间：21:51:43" itemprop="dateCreated datePublished" datetime="2019-09-22T13:05:36+08:00">2019-09-22</time>
             
 
             
@@ -377,8 +377,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/" itemprop="commentCount"></span>
+                <a href="/2019/09/22/被面试官怼自闭之二：new发生了什么/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/22/被面试官怼自闭之二：new发生了什么/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -386,7 +386,7 @@
 
           
           
-             <span id="/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/" class="leancloud_visitors" data-flag-title="被面试官怼自闭之一：动态链接库和静态链接库">
+             <span id="/2019/09/22/被面试官怼自闭之二：new发生了什么/" class="leancloud_visitors" data-flag-title="被面试官怼自闭之二：new发生了什么">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -417,27 +417,24 @@
       
 
       
-        <p>先说自己现在的理解，然后去查资料补上来。</p>
+        <p>new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。</p>
 <a id="more"></a>
-<p>库的存在是为了重用代码，同时也有一定的相对独立性。即库外部比较难修改库内部的代码。</p>
-<p>典型的c/cpp程序的生成过程分为四步，预处理-&gt;语法分析-&gt;汇编-&gt;链接。在链接过程中，如果使用了静态链接库，整个静态库的二进制代码会被复制到生成的可执行文件中。在程序运行的时候，可以直接从二进制代码中获取库函数的内部细节。这样拜托了对库的依赖，提高了可移植性。</p>
+<p>低端回答：new是操作符，new调用了构造函数，new返回特定类型的指针，new的参数是结构体而不是空间大小。</p>
+<p>我以前一直觉得这样就行了，但是面试官显然不想就此作罢。</p>
+<p>new的时候，操作系统/底层 发生了什么？</p>
+<p>我们当然知道，new首先调用malloc分配空间，然后再调用构造函数对空间进行具体的操作。</p>
 <blockquote>
-<p>更准确的说法可能是 编译-&gt;汇编-&gt; 链接 ，其中编译包括了预处理阶段。</p>
+<p>这里有问题，new调用的是operator new，这是个可重载的operator，类似于重载=那种。new本身是一个保留的标识符。</p>
 </blockquote>
-<p>如果使用了动态链接库，则链接这一过程会被推迟到程序运行阶段。在程序运行的时候，如果某一步需要调用动态链接库，则首先在虚拟内存的映射区开辟一块空间，然后通过类似mmap的方法将动态链接库映射到程序的虚拟内存中。因为是代码，所以是只读数据，不存在数据竞争问题。</p>
-<p>静态库的优势：可移植性</p>
-<p>劣势：对一部分代码的修改需要全局重新编译。可执行文件很大。</p>
-<p>动态库的优势：离散编译。每一部分的修改只需要单独编译这一部分，对库的版本升级友好。可执行文件较小，不同程序可以更好地共享可执行动态链接库。</p>
-<p>劣势：移植性。移动一个可执行文件之后还需要确认目标机器上是不是具有相应的动态库。运行期由于需要查找库函数，可能会影响程序运行速度。</p>
-<p>目前大部分程序使用大量动态链接库。</p>
-<p>番外：</p>
-<p>static的下层实现：在汇编过程完成后，.o文件提供了至少三张表，包括导出符号表，未解决符号表，地址重定向表。导出符号表是告诉其他文件自己包含这个符号，如果你找不到可以来问我。未解决符号表表示自己的文件中不包含这个符号，需要链接过程向其他的文件的导出符号表咨询。</p>
-<p><code>static</code>的全局变量或全局函数之所以作用域只在本文件中，是因为static告诉编译器不要将这个符号加入到导出符号表中。同样，static的局部变量也不会被加入到导出符号表中（因为已知的作用域原因）。</p>
-<p>类似的，<code>extern</code>关键字告诉编译器将该关键字加入未解决符号表中。</p>
-<p>默认属性：全局的函数和变量一般为外部链接，即加入导出符号表，<code>const</code>则默认为内部链接。</p>
-<p>函数定义一般为外部链接。</p>
-<p><code>inline</code>函数如果只定义在cpp文件中，则在编译之后不存在于符号表中。因此，多文件共用inline函数需要定义在h文件中。同时，因为内联，不会生成导出符号。</p>
-<p>大部分摘自<a href="https://blog.csdn.net/CSDN_Violin/article/details/79430384" target="_blank" rel="noopener">csdn</a>。有改动。</p>
+<p>那么问题来了，malloc又做了什么呢？</p>
+<p>我傻眼了。malloc不就是向系统要了内存吗？还能做什么？总不能还借职务之便收点回扣？</p>
+<p>时至今日，我大概知道面试官想问的问题是内存池。我保证，在我一个多月之前看stl内存分配的时候我是已经知道内存池的概念和做法的，但是我并不知道malloc下边还有个内存池。所以没说出来也不算失误，只是知识不够。</p>
+<p>linux内存模型及分配方法</p>
+<p>对一个典型的32位系统，一个应用程序的虚拟内存大小是4G。即，每个程序都认为自己独占4G的内存空间。从低地址到高地址分别为  </p>
+<p>代码段-&gt;数据段（数据段分为已初始化的数据段和未初始化的BSS段）-&gt;堆空间-&gt;文件映射区-&gt;栈区-&gt;环境变量区-&gt;kernel。</p>
+<p>其中kernel和环境变量和栈从高地址位依次向下，代码段和数据段和堆从低地址位依次向上，在堆和栈的中间（不相邻）的地方是文件映射区，主要用于映射一些动态链接库，以及一部分分配内存的作用。</p>
+<p>对于malloc或者operator new的内存分配来说，主要的分配方法有brk, sbrk, mmap。当分配的内存小于128kb时，使用brk或者sbrk将堆上界向上推，brk向上推到固定的位置，sbrk推固定的长度（可以使用size break助记），并将多的这部分内存首地址返回。使用sbrk会直接得到4k的倍数的内存。</p>
+<p>需要注意的是，brk也可以吸收一个小于当前堆顶的值，这样</p>
 
       
     </div>
@@ -474,8 +471,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/21/文书/" rel="next" title="文书">
-                <i class="fa fa-chevron-left"></i> 文书
+              <a href="/2019/09/22/被面试官怼自闭之一：动态链接库和静态链接库/" rel="next" title="被面试官怼自闭之一：动态链接库和静态链接库">
+                <i class="fa fa-chevron-left"></i> 被面试官怼自闭之一：动态链接库和静态链接库
               </a>
             
           </div>
@@ -484,8 +481,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/22/被面试官怼自闭之二：new发生了什么/" rel="prev" title="被面试官怼自闭之二：new发生了什么">
-                被面试官怼自闭之二：new发生了什么 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/09/22/onedrive同步任意文件夹/" rel="prev" title="onedrive同步任意文件夹">
+                onedrive同步任意文件夹 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
