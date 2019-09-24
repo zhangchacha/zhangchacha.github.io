@@ -125,7 +125,7 @@
 <meta property="og:site_name" content="Cha">
 <meta property="og:description" content="new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-22T13:51:43.081Z">
+<meta property="og:updated_time" content="2019-09-24T03:55:23.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="被面试官怼自闭之二：new发生了什么">
 <meta name="twitter:description" content="new 和malloc之争由来已久。c++新引入的关键字尝试从语言层面上给出操作内存的统一路径。new和malloc的区别也是很多面试官的入门问题。">
@@ -358,12 +358,24 @@
                 
               
 
-              <time title="创建时间：2019-09-22 13:05:36 / 修改时间：21:51:43" itemprop="dateCreated datePublished" datetime="2019-09-22T13:05:36+08:00">2019-09-22</time>
+              <time title="创建时间：2019-09-22 13:05:36" itemprop="dateCreated datePublished" datetime="2019-09-22T13:05:36+08:00">2019-09-22</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-24 11:55:23" itemprop="dateModified" datetime="2019-09-24T11:55:23+08:00">2019-09-24</time>
               
             
           </span>
@@ -421,20 +433,65 @@
 <a id="more"></a>
 <p>低端回答：new是操作符，new调用了构造函数，new返回特定类型的指针，new的参数是结构体而不是空间大小。</p>
 <p>我以前一直觉得这样就行了，但是面试官显然不想就此作罢。</p>
-<p>new的时候，操作系统/底层 发生了什么？</p>
-<p>我们当然知道，new首先调用malloc分配空间，然后再调用构造函数对空间进行具体的操作。</p>
+<h3 id="new的时候，操作系统-底层-发生了什么？"><a href="#new的时候，操作系统-底层-发生了什么？" class="headerlink" title="new的时候，操作系统/底层 发生了什么？"></a>new的时候，操作系统/底层 发生了什么？</h3><p>我们当然知道，new首先调用malloc分配空间，然后再调用构造函数对空间进行具体的操作。</p>
 <blockquote>
 <p>这里有问题，new调用的是operator new，这是个可重载的operator，类似于重载=那种。new本身是一个保留的标识符。</p>
 </blockquote>
-<p>那么问题来了，malloc又做了什么呢？</p>
-<p>我傻眼了。malloc不就是向系统要了内存吗？还能做什么？总不能还借职务之便收点回扣？</p>
+<p>那么问题来了，</p>
+<h3 id="malloc又做了什么呢？"><a href="#malloc又做了什么呢？" class="headerlink" title="malloc又做了什么呢？"></a>malloc又做了什么呢？</h3><p>我傻眼了。malloc不就是向系统要了内存吗？还能做什么？总不能还借职务之便收点回扣？</p>
 <p>时至今日，我大概知道面试官想问的问题是内存池。我保证，在我一个多月之前看stl内存分配的时候我是已经知道内存池的概念和做法的，但是我并不知道malloc下边还有个内存池。所以没说出来也不算失误，只是知识不够。</p>
-<p>linux内存模型及分配方法</p>
-<p>对一个典型的32位系统，一个应用程序的虚拟内存大小是4G。即，每个程序都认为自己独占4G的内存空间。从低地址到高地址分别为  </p>
+<h3 id="linux内存模型及分配方法"><a href="#linux内存模型及分配方法" class="headerlink" title="linux内存模型及分配方法"></a>linux内存模型及分配方法</h3><p>对一个典型的32位系统，一个应用程序的虚拟内存大小是4G。即，每个程序都认为自己独占4G的内存空间。从低地址到高地址分别为  </p>
 <p>代码段-&gt;数据段（数据段分为已初始化的数据段和未初始化的BSS段）-&gt;堆空间-&gt;文件映射区-&gt;栈区-&gt;环境变量区-&gt;kernel。</p>
 <p>其中kernel和环境变量和栈从高地址位依次向下，代码段和数据段和堆从低地址位依次向上，在堆和栈的中间（不相邻）的地方是文件映射区，主要用于映射一些动态链接库，以及一部分分配内存的作用。</p>
-<p>对于malloc或者operator new的内存分配来说，主要的分配方法有brk, sbrk, mmap。当分配的内存小于128kb时，使用brk或者sbrk将堆上界向上推，brk向上推到固定的位置，sbrk推固定的长度（可以使用size break助记），并将多的这部分内存首地址返回。使用sbrk会直接得到4k的倍数的内存。</p>
-<p>需要注意的是，brk也可以吸收一个小于当前堆顶的值，这样</p>
+<p>对于malloc或者operator new的内存分配来说，主要的分配方法有brk, sbrk, mmap。当分配的内存小于128kb时，使用brk或者sbrk将堆上界向上推，brk向上推到固定的位置，sbrk推固定的长度（可以使用size break助记），并将多的这部分内存首地址返回。使用sbrk会直接得到4k的倍数的内存。当分配的内存大于128kb时，直接使用mmap方法在堆和栈中间的文件映射区分配一块内存出来。这里使用了mmap的匿名映射，即不映射具体文件只分配内存。</p>
+<p>需要注意的是，brk也可以吸收一个小于当前堆顶的值，这样相当于将brk向堆上界的反方向推，逻辑上等同于释放堆内存。</p>
+<h3 id="malloc中的内存池"><a href="#malloc中的内存池" class="headerlink" title="malloc中的内存池"></a>malloc中的内存池</h3><p>我们终于来到了malloc的内存池了。在此之前，尝试解释一下为什么需要内存池可能是有必要的。</p>
+<p>首先，虚拟内存和物理内存存在逻辑对应关系。但是只有在进程真正调用某一个虚拟内存地址的时候，这一块内存才会真正的指向一个物理内存，从而（一般会）引发一个缺页中断。</p>
+<p>缺页中断这个东西其实是我们不想看到的，可以大概理解为我的钱（page）不够用了去找爸妈（内核）借（中断）一点，这当然免不了被一通数落和从箱底不知道什么地方翻出来钱的过程。在没有内存池的时候，本着专钱专用的思想，我们可能会因为租车向爸妈要钱做押金，然后用完了还回去，然后因为租房子向爸妈要钱做押金，然后用完了再还回去。但是爸妈其实并不会向我收利息，我就懒得每次都去听他们因为这个事情唠叨了。当然有什么其他问题（IO等等）还是要听一顿唠叨的。于是我一次向爸妈借了一大笔钱，然后每次自己需要用钱来做抵押的时候，从里边取出一部分。在收回之后也暂时放在自己手里。我们把这个思想称作金钱池（内存池）。</p>
+<p>还有另一个问题是，指示进程的堆的大小的指针只有两个，堆顶指针和堆底指针（这里的堆底可能不是BSS段的顶部，可能会有一个random的偏移）。如果我申请了两块内存之后把堆中间的一段内存free了呢？我没法从我的堆中间剔除掉这一段。因为我不能直接把堆顶指针下移，因为堆顶还有数据。于是我尝试先把这一段标记为可用，当再次malloc的时候优先分配这一段内存。</p>
+<p>事实上，进程并不知道自己之后需要多少内存。因此，进程不能一次把自己需要的内存全部申请到。但是稍微多申请一些做机动还是可以的。</p>
+<p>至此，我们已经基本掌握了内存池的动机，接下来是内存池的做法。</p>
+<p>我在这里给两个链接：<a href="https://blog.csdn.net/T146lLa128XX0x/article/details/80768602" target="_blank" rel="noopener">链接1</a>和<a href="https://blog.csdn.net/gfgdsg/article/details/42709943" target="_blank" rel="noopener">链接2</a>，<a href="https://blog.csdn.net/ZYZMZM_/article/details/90670471" target="_blank" rel="noopener">链接3</a>。主要是没有图实在是难懂，我又不太想弄图上去。为啥没有博客提供<code>#include &quot;另一个博客&quot;</code>这种功能。</p>
+<p>虽然不打算完全抄过来，但还是说一下基本思路吧。</p>
+<ul>
+<li><p>malloc会记录为用户分配的块的元信息，比如大小等。这样在free的时候，就可以清楚地知道需要free多少空间。事实上，malloc里的空间以chunk为单位，返回给用户的地址是chunk中的data指针。</p>
+</li>
+<li><p>malloc中的相似大小的chunk使用双向链表连接起来，称为一个bin。不同大小的bin存储在一个数组中。构成一个二维结构。bin数组一共有128个元素，数组的第一个元素称作unsorted bin，存放了暂时没有细分的内存块，从第二个开始的64个叫做small bin，相邻两个大小相差约8byte，small bin之后的元素称为large bin，相邻两个相差64byte。</p>
+</li>
+<li><p>在上边三个之外，还有一个称为fastbin。fastbin专供小区间使用，当程序申请空间或释放空间小于一定阈值（max_fast）时，直接同fastbin交互。</p>
+</li>
+<li><p>在bin类空间之外，还有三种不属于bin类空间的chunk。</p>
+<ul>
+<li>mmap chunk，就是使用mmap分配的chunk，不在堆上</li>
+<li>top chunk，顾名思义，就是堆顶的chunk。如果从这里分配低地址空间之后，剩下的部分作为新的top chunk。</li>
+<li>last remainder chunk，类似于smallbin和largebin中的一层，如果在smallbin中找不到，先尝试使用last remainder chunk，如果成功，则划分一部分空间，剩下的成为新的last remainder chunk。</li>
+</ul>
+</li>
+<li><p>因为chunk中会记录chunk的元信息，因此，chunk的大小有一个最小值。在chunk未被分配出去时，chunk内部存在许多信息，包括双向链表信息，下一个chunk信息等。当chunk被分配出去之后，这些位置用来存放用户信息。</p>
+</li>
+<li><p>分配顺序：一开始时，brk和start_brk是相等的，这时实际heap大小为0；如果第一次用户请求的内存大小小于mmap分配阈值，则malloc会申请(chunk_size+128kb) align 4kb大小的空间作为初始的heap。初始化heap之后，第二次申请的内存如果还是小于mmap分配阈值时，malloc会先查找fast bins,如果不能找到匹配的chunk，则查找small bins。若还是不行，合并fast bins,把chunk 加入到unsorted bin，在unsorted bin中查找，若还是不行，把unsorted bin中的chunk全加入large bins中，并查找large bins。在fast bins和small bins中查找都需要精确匹配，而在large bins中查找时，则遵循”smalest-first,best-fit”的原则，不需要精确匹配。</p>
+<p>若以上都失败了，malloc则会考虑使用top chunk。若top chunk也不能满足分配，且所需的chunk大小大于mmap分配阈值，则使用mmap进行分配。否则增加heap，增加top chunk，以满足分配要求。</p>
+</li>
+</ul>
+<p>大致上就是这样的过程。</p>
+<h3 id="alloc族函数的区别"><a href="#alloc族函数的区别" class="headerlink" title="alloc族函数的区别"></a>alloc族函数的区别</h3><p>alloc族函数主要包括：alloca，malloc，calloc，realloc。</p>
+<ul>
+<li>alloca（也可能名字是_alloca）从栈上分配内存。关于栈和堆的区别请自行搜索，这里不展开描述了。</li>
+<li>malloc。emmmm看到这里你应该知道它干了什么了吧。</li>
+<li>calloc会默认将分配到的地址初始化为0。并且它的参数有两个，其他地方和malloc并没有很大区别。</li>
+<li>realloc会首先尝试直接在自己的地址上扩展到需要的大小。如果无法扩展，也就是说当前的地址之后的位置被其他变量使用了，那么realloc会先申请一块目标大小的内存空间，然后将原有的空间中的所有数据拷贝过去，多出的空间的内容未初始化，然后<strong>将原有空间释放</strong>。如何知道要拷贝的长度和释放的长度呢？当然是已经写在相应的chunk里了。如果尝试realloc一段比原长更短的空间，那么多余的部分将被释放。并保证剩下的部分的数据不变。</li>
+</ul>
+<h3 id="STL中的内存池"><a href="#STL中的内存池" class="headerlink" title="STL中的内存池"></a>STL中的内存池</h3><p>STL实现了二级内存配置，当需要分配的空间大于128kb，或者二级内存池中的空间不足时，直接调用malloc，brk等一级内存分配器获取空间。在二级内存配置器上，STL维护了一个类似上边的smallbin的结构，将数据块按照8k的倍数划分并且使用链表连起来。</p>
+<p>被我说的就很low。需要去查一下。</p>
+<p>好像还就是这样，但是多了一个refill，就是在某个特定大小的数据块没有了之后，会调用refill重新填充。</p>
+<h3 id="placement-new"><a href="#placement-new" class="headerlink" title="placement new"></a>placement new</h3><p>突然发现了我的题目是new发生了什么。除了关键字new，operator new之外，还有一种new叫做placement new。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="keyword">operator</span> <span class="title">new</span><span class="params">( <span class="keyword">size_t</span>, <span class="keyword">void</span> * p )</span> <span class="title">throw</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> p; &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法不能重载。。。。。</p>
+<p>placement new允许跳过new前边的malloc过程，直接调用构造函数，但是需要传入一个已经分配了的地址。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> * gMemoryCache = (<span class="keyword">char</span> *) <span class="built_in">malloc</span> (<span class="keyword">sizeof</span>(Test));</span><br><span class="line">Test * test = <span class="keyword">new</span>(gMemoryCache) Test();</span><br></pre></td></tr></table></figure>
+<p>调用的形式和一般的new略有不同，因为要传入一个已经分配的内存地址。</p>
+<p>同时，placement new对应的类一般不使用delete，因为malloc的内存一般应该对应free来释放，但是因为调用了构造函数，所以可能需要手动调用析构函数。</p>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>怎么又写了三千字哦。是不是想写一个东西都要三千字。难顶，但是感觉还是学到了东西的。</p>
 
       
     </div>
