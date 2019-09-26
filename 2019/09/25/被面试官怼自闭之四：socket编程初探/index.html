@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="mlz0ue2Pf9AGfHUacbPhDekI2qQw3MVNEOM7HjqKpUE">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.ico?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"remove","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在此之前的所有面试中，经常有（几乎所有后台开发和c++方向的）面试官问我，网络会吗？我就只能如实回答，会一些理论知识，但是不会socket编程。面试官脸上总是会有淡淡的失望，溢于言表。">
+<meta name="keywords" content="面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="被面试官怼自闭之四：socket编程初探">
+<meta property="og:url" content="http://zhangchacha.github.io/2019/09/25/被面试官怼自闭之四：socket编程初探/index.html">
+<meta property="og:site_name" content="Cha">
+<meta property="og:description" content="在此之前的所有面试中，经常有（几乎所有后台开发和c++方向的）面试官问我，网络会吗？我就只能如实回答，会一些理论知识，但是不会socket编程。面试官脸上总是会有淡淡的失望，溢于言表。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-25T16:56:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="被面试官怼自闭之四：socket编程初探">
+<meta name="twitter:description" content="在此之前的所有面试中，经常有（几乎所有后台开发和c++方向的）面试官问我，网络会吗？我就只能如实回答，会一些理论知识，但是不会socket编程。面试官脸上总是会有淡淡的失望，溢于言表。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zhangchacha.github.io/2019/09/25/被面试官怼自闭之四：socket编程初探/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>被面试官怼自闭之四：socket编程初探 | Cha</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <!-- heart on click -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cha</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">For my dearest Chacha</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangchacha.github.io/2019/09/25/被面试官怼自闭之四：socket编程初探/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ying">
+      <meta itemprop="description" content="Long Long ago">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">被面试官怼自闭之四：socket编程初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-25 08:48:16" itemprop="dateCreated datePublished" datetime="2019-09-25T08:48:16+08:00">2019-09-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-26 00:56:23" itemprop="dateModified" datetime="2019-09-26T00:56:23+08:00">2019-09-26</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/25/被面试官怼自闭之四：socket编程初探/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/25/被面试官怼自闭之四：socket编程初探/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/09/25/被面试官怼自闭之四：socket编程初探/" class="leancloud_visitors" data-flag-title="被面试官怼自闭之四：socket编程初探">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在此之前的所有面试中，经常有（几乎所有后台开发和c++方向的）面试官问我，网络会吗？我就只能如实回答，会一些理论知识，但是不会socket编程。面试官脸上总是会有淡淡的失望，溢于言表。</p>
+<a id="more"></a>
+<p>本着不求甚解的精神，我决定去探究一下socket编程，至少可以跟面试官说我略懂，但是你问的太深了，我没有清楚地了解过。</p>
+<h3 id="socket编程基础"><a href="#socket编程基础" class="headerlink" title="socket编程基础"></a>socket编程基础</h3><p>因为某些原因，我们选择linux下的socket编程。</p>
+<blockquote>
+<p>主要是因为我没有两台在同一局域网的windows机器可以支持我做实验</p>
+</blockquote>
+<p>socket编程我主要是看的<a href="https://www.cnblogs.com/L-hq815/archive/2012/07/09/2583043.html" target="_blank" rel="noopener">这一篇博客</a>和<a href="http://c.biancheng.net/cpp/socket/" target="_blank" rel="noopener">这里</a></p>
+<blockquote>
+<p>我其实看的是另一篇博客，但是那一篇的页面实在是看的太累了，黑底白字，加上经常出现的白底代码块，一个字，刺眼。</p>
+</blockquote>
+<p>我们这里先把两段代码给出，然后再具体讨论其中的细节</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> serv_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv_addr</span>;</span></span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(struct sockaddr_in));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">    serv_addr.sin_port = htons(<span class="number">1234</span>);</span><br><span class="line">    bind(serv_sock, (struct sockaddr*)&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    </span><br><span class="line">    listen(serv_sock, <span class="number">20</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">clnt_addr</span>;</span></span><br><span class="line">    <span class="keyword">socklen_t</span> clnt_addr_size = <span class="keyword">sizeof</span>(clnt_addr);</span><br><span class="line">    <span class="keyword">int</span> clnt_sock = accept(serv_sock, (struct sockaddr*)&amp;clnt_addr, &amp;clnt_addr_size);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> str[] = <span class="string">"Hello World\n"</span>;</span><br><span class="line">    write(clnt_sock, str, <span class="keyword">sizeof</span>(str));</span><br><span class="line">    </span><br><span class="line">    close(clnt_sock);</span><br><span class="line">    close(serv_sock);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// clint.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sock = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">serv_addr</span>;</span></span><br><span class="line">    <span class="built_in">memset</span>(&amp;serv_addr, <span class="number">0</span>, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    serv_addr.sin_family = AF_INET;</span><br><span class="line">    serv_addr.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">    serv_addr.sin_port = htons(<span class="number">1234</span>);</span><br><span class="line">    </span><br><span class="line">    connect(sock, (struct sockaddr*)&amp;serv_addr, <span class="keyword">sizeof</span>(serv_addr));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">40</span>];</span><br><span class="line">    read(sock, buffer, <span class="keyword">sizeof</span>(buffer)<span class="number">-1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"receive message : \n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, buffer);</span><br><span class="line">    </span><br><span class="line">    close(sock);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码亲测可用。完成的效果是，先开启服务端，服务端会阻塞在accept处，然后开启客户端，客户端会尝试连接服务端，一旦连接成功，服务端会向客户端写数据，客户端读数据并输出，双方在此之后关闭连接。</p>
+<h3 id="通信流程"><a href="#通信流程" class="headerlink" title="通信流程"></a>通信流程</h3><p>就我自己的经验来说，记住这么一长串代码并不发生错误是一件很难的事情。就像你可以记住11223344这样的长度为1万的序列，但是记不住37492478329这种长度为20的序列一样，当你知道一个东西的规律之后，记住它就变得简单了起来。</p>
+<p>那么我们需要知道socket编程的基本组成单元，以及它的组合方式，就很容易组合出来一个可行的socket使用方法。</p>
+<p>这里没有为什么我们要用这个不用那个，我们只有这个，于是我们用这个，或者大家都用这个，我只有用这个才能和别人交互（我倾向于这一种解释）。</p>
+<p>众所周知，通信需要有发送方和接收方。没有发送方的通信是不存在的，没有接收方的通信是无意义的（你当然可以把自言自语当做通信，但这是接收方就是你自己）。</p>
+<p>更进一步的是，我们需要的是一个特定的接收方。我们知道这个接收方的一部分特点。当然我们偶尔也会对着人群大喊，这个时候接收方可能有很多，我们先不讨论这个，这可能涉及到其他的一些问题和协议。</p>
+<p>那我们在这里假设我们知道了我想要发送消息的接收方。我们“知道”的方式是什么呢？在人际交往中，我们会知道一个人的名字，长相，或者是家庭电话，电子邮箱，然后我们可以和他通信。在网络世界中，一个远端的单位（逻辑实体）被建模为IP和端口。我们可以粗略的认为，知道了一个IP和端口之后，我们就可以确定我们要通信的另一方了。</p>
+<p>另一个重要的事情是，我们使用什么通信。具体到这个例子的话，你可以理解为，通信的两端开辟了一个管道，然后一方向管道里放信息，另一方从管道里拿信息。</p>
+<p>在<code>server.cpp</code>和<code>clint.cpp</code>中，<code>main</code>函数的第一行都是新建一个socket。我们知道，我们作为高端的层次，并不能够直接和管道交互，因此，需要有一个结构帮助我们和管道交互。socket就是一个这样的对象。事实上socket是操作系统对网络层建立的一个抽象，让上层程序可以通过类似读写文件的形式操作网络信息。建立socket完毕之后，我们就有了建立管道的基础，这个socket应该包括它的使用说明，包括它的协议类型（<code>AF_INET</code>）等信息。</p>
+<p>我们有了两个socket了。我们可以建立起管道然后通信了吗？可能还需要等一会。因为网络上可能有成千上万（远远不止）个socket想要和他们的另一方连接，那我怎么知道我要连接到哪个socket呢？这时候就需要我们刚才说的，网络世界通行证，IP和端口了。这里说一下我们为什么需要一个结构体来把地址封装起来，因为对一个程序员来说，首先IP和端口还有协议类型大部分时候需要同时出现，其次，不封装起来的话，直接调用可能会发生顺序之类的错误，给程序员留一点头发吧。最后还有一点就是当这个协议随着时间的流逝不能满足我的需求了之后，我也可能在协议上进行一些修改，直接修改结构体比把所有调用到它的地方都找出来改掉要方便得多（找出来比改掉麻烦的多）。</p>
+<p>我们用了很多行进行地址的装入，如果你想提出字节序的问题的话，请等一会。现在我们有了两个指定好IP和端口的地址和两个socket。我现在想要连接了。在网络世界中，通常会有一个主动方（client）和一个被动方（server），在恋爱世界中通常也是这样。client负责发起连接请求，server负责在client发起连接请求之后同意连接请求。（你应该问一句为什么是这样的，但是很遗憾，我并不知道）。一般来说，client需要知道server的地址，然后就可以连接了。前提是目标IP上的某个进程对外声明它对client要连接的这个端口负责。我们使用<code>bind</code>命令来实现这个声明，两个进程同时声明某个端口通常是非法的，因此，在做实验的时候请选择一个大一点的不容易冲突的端口。</p>
+<p>在server声明了对某个端口负责之后，他可能需要进行一些准备工作。然后，当他认为自己已经准备好之后，他开始侦听外部的连接。<code>listen</code>方法允许server持续侦听某个socket（这个socket当然已经被绑定到了某个IP+端口上）。在大部分情况下，我们可能需要它在连接到某一个幸运的client之后继续保持侦听状态。因此，server的<code>listen</code>方法还有另一个参数，表明可供连接的client可以排多长的队。</p>
+<p>我们的server已经完全准备好了，他已经将他的端口对外开放并且正在认真的监听端口上的一举一动。是时候进行连接了。client向目标IP和端口发起一个<code>connect</code>请求，表明自己想要和对方进行连接。如果server同意请求，则进行<code>accept</code>同意连接。这里的逻辑稍微有一些不好理解，事实上，server端先进行<code>accept</code>，但是端口上没有<code>connect</code>请求，因此server只好尬（阻塞）在这里，直到好心的client来解围（<code>connect</code>），然后双方愉快的牵手成功。</p>
+<p>需要重点注意的是，accept方法会返回一个新的socket，这个新的socket是用来和<strong><em>这一个</em></strong>client通信的之前的socket继续在端口上侦听有没有新的连接到来。</p>
+<p>迄今为止我们的逻辑顺序应该是这样的：</p>
+<p>server init -&gt; server bind -&gt; server listen -&gt; server accept (阻塞) -&gt; client init -&gt; client connect -&gt; connection established.</p>
+<p>连接建立成功之后的一切都变得索然无味。无非是一方写socket另一方读socket。其间因为TCP的缓存机制导致的双方发生误会也只是在平淡的生活中的一点小浪花，最后双方好聚好散，双双close，真乃人间悲剧。</p>
+<h3 id="字节序问题"><a href="#字节序问题" class="headerlink" title="字节序问题"></a>字节序问题</h3><p>我们已经知道了大端小端问题。我们无意解释这个问题的历史原因，总之市面上的机器分为两类，一种是把低字节放在低地址位的，称作小端，另一种是把低字节放在高地址位的，成为大端。我倾向于记住低字节放的东西来记这两个概念的区分，你当然也可以用其他好记的方法。</p>
+<p>网络字节序就是一种大端的字节序。这个很容易记住，有人问你就会想起来。但是在每一次写程序之后都要判断自己的机器字节序很令人厌烦，有的时候你甚至不知道机器的字节序。所幸，在可以使用socket编程的地方，都有一组函数（如果你说没有，可能是你没有找到对应的头文件）来进行字节序的转换。我们不用关心字节序具体是什么养的，只需要知道它应当在网络中还是在主机上，在转换的时候可以直接调用<code>hton{s,l}</code>将主机字节序转换为网络字节序，也就是<code>host to network {short, long}</code>，这里的大括号表示选其一。对应的反过来的函数<code>ntoh{s, l}</code>当然也有。这些函数应当可以让你免受字节序之苦。</p>
+<h3 id="粘包问题"><a href="#粘包问题" class="headerlink" title="粘包问题"></a>粘包问题</h3><p>假设我有这样的需求，我每次向服务器发送一段数据，服务器返回给我一个hello。那么我收到的hello的数量应当等于我发送数据的量。但事实上，如果你进行测试并且每次发送的数据都比较小的话，服务器返回的hello的数量可能会远小于你发送的数据次数。</p>
+<p>你可以不用思考原因，我们来直接揭晓答案。因为缓存机制（Nagle算法）。网卡上有一段缓存，用来保存没有完全到来的数据，然后将他们一次性的发送出去。之所以有这个机制是因为每发送一段数据，就会从上到下层层包头套上去，每多发一个包，就会多发很多无用信息，因为，我们的机器和协议都倾向于发送更少的包。</p>
+<p>于是乎，我们的数据被聚成了一团才发出去，而服务器收到之后，以为这是我们发的一次数据，于是就只给我们返回了一个hello。</p>
+<p>这就是粘包问题了，解决方法主要有：</p>
+<p>关闭缓存机制。TCP提供了强制发送指令<code>push</code>（or <code>TCP_NODELAY</code>，whatever)，但是这样会降低效率。</p>
+<p>短连接。每次发一个包之后断开连接。同样降低效率。</p>
+<p>接收方建立预处理线程，对数据先做一次拆包处理。</p>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>咋又三千字了。这次代码比较多。暂时先写这些吧，以后再写的时候可能就不是初探了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/面试/" rel="tag"># 面试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/24/被面试官怼自闭之三：字节对齐/" rel="next" title="被面试官怼自闭之三：字节对齐">
+                <i class="fa fa-chevron-left"></i> 被面试官怼自闭之三：字节对齐
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ying</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'B7sDx1c8hi4Yrcl1RRNvALk5-gzGzoHsz',
+        appKey: 'tshUNuxP9waG3ucpO7ORRAKf',
+        placeholder: '以茶代酒，但愿长醉不复醒',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: true
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false,"scale":0.5},"log":false,"tagMode":false});</script></body>
+</html>
