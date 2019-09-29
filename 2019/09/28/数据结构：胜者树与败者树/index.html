@@ -117,24 +117,24 @@
 
 
 
-  <meta name="description" content="文章已加密，请输入密码查看">
+  <meta name="description" content="对海量数据取top K的问题现在已经是一个极其热门的问题了，仅仅是我的面试中就被问了不下三次。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="给茶茶-1-2">
-<meta property="og:url" content="http://zhangchacha.github.io/2019/01/02/情书-1-2/index.html">
+<meta property="og:title" content="数据结构：胜者树与败者树">
+<meta property="og:url" content="http://zhangchacha.github.io/2019/09/28/数据结构：胜者树与败者树/index.html">
 <meta property="og:site_name" content="Cha">
-<meta property="og:description" content="文章已加密，请输入密码查看">
+<meta property="og:description" content="对海量数据取top K的问题现在已经是一个极其热门的问题了，仅仅是我的面试中就被问了不下三次。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-24T00:55:56.585Z">
+<meta property="og:updated_time" content="2019-09-28T13:33:10.254Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="给茶茶-1-2">
-<meta name="twitter:description" content="文章已加密，请输入密码查看">
+<meta name="twitter:title" content="数据结构：胜者树与败者树">
+<meta name="twitter:description" content="对海量数据取top K的问题现在已经是一个极其热门的问题了，仅仅是我的面试中就被问了不下三次。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://zhangchacha.github.io/2019/01/02/情书-1-2/">
+  <link rel="canonical" href="http://zhangchacha.github.io/2019/09/28/数据结构：胜者树与败者树/">
 
 
 
@@ -144,7 +144,7 @@
   };
 </script>
 
-  <title>给茶茶-1-2 | Cha</title>
+  <title>数据结构：胜者树与败者树 | Cha</title>
   
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangchacha.github.io/2019/01/02/情书-1-2/">
+    <link itemprop="mainEntityOfPage" href="http://zhangchacha.github.io/2019/09/28/数据结构：胜者树与败者树/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ying">
@@ -332,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">给茶茶-1-2
+          <h1 class="post-title" itemprop="name headline">数据结构：胜者树与败者树
               
             
           </h1>
@@ -357,24 +357,12 @@
                 
               
 
-              <time title="创建时间：2019-01-02 10:35:53" itemprop="dateCreated datePublished" datetime="2019-01-02T10:35:53+08:00">2019-01-02</time>
+              <time title="创建时间：2019-09-28 19:03:21 / 修改时间：21:33:10" itemprop="dateCreated datePublished" datetime="2019-09-28T19:03:21+08:00">2019-09-28</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-09-24 08:55:56" itemprop="dateModified" datetime="2019-09-24T08:55:56+08:00">2019-09-24</time>
               
             
           </span>
@@ -388,8 +376,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/01/02/情书-1-2/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/01/02/情书-1-2/" itemprop="commentCount"></span>
+                <a href="/2019/09/28/数据结构：胜者树与败者树/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/09/28/数据结构：胜者树与败者树/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -397,7 +385,7 @@
 
           
           
-             <span id="/2019/01/02/情书-1-2/" class="leancloud_visitors" data-flag-title="给茶茶-1-2">
+             <span id="/2019/09/28/数据结构：胜者树与败者树/" class="leancloud_visitors" data-flag-title="数据结构：胜者树与败者树">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -428,19 +416,28 @@
       
 
       
-        <div id="hbe-security">
-  <div class="hbe-input-container">
-  <input type="password" class="hbe-form-control" id="pass" placeholder="你猜密码是啥？">
-    <label for="pass">你猜密码是啥？</label>
-    <div class="bottom-line"></div>
-  </div>
-</div>
-<div id="decryptionError" style="display: none;">Incorrect Password!</div>
-<div id="noContentError" style="display: none;">No content to display!</div>
-<div id="encrypt-blog" style="display:none">
-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
-</div>
-<script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+        <p>对海量数据取top K的问题现在已经是一个极其热门的问题了，仅仅是我的面试中就被问了不下三次。</p>
+<a id="more"></a>
+<p>一般来说，海量问题要么转化为流处理，要么转化成分治思路。如果是对这些数据进行排序，毫无疑问需要进行多路归并排序，即以归并排序思想先分治，然后将排序结果汇总起来。如果只是取top K的话，最快的方法是基于快速排序的快速选择，假设问题为在n个数据中取top K，首先确定一个锚点p，使用快速排序思想将数据划分为p和q两部分（p+q+1=n），则如果q&gt;K，问题转化为在q个数中取top K，如果q+1&lt;K，问题转化为在剩下的p个数中取top （K-(q+1)）再结合右边的q个数和我们的锚点就是最终的结果。但是这种方法可能多次遍历数据，个人认为最优的方法还是采用堆排序思路，维护一个大小为K的小顶堆，通过流的思想每次使用一个元素尝试更新堆。等到整个流遍历一遍，留在堆中的数据就是最大的K个。</p>
+<p>基于堆的top K问题的时间复杂度是nlogK。</p>
+<h3 id="胜者树"><a href="#胜者树" class="headerlink" title="胜者树"></a>胜者树</h3><p>我们考虑堆的调整过程。在流式堆调整过程中，对于我的小顶堆，每次使用流入的数据和堆顶数据进行比较，如果流入数据更大，则将堆顶元素替换。在每一层的调整中，需要父节点和两个子节点同时进行比较，选择出来三个节点中最小的一个作为父节点，然后再进行下一层调整。</p>
+<p>胜者树的思路和堆有一些不同。首先，胜者树也是一棵完全二叉树，因此，很容易使用顺序数据结构表示。其次，胜者树只有叶子结点存储数据，每个非叶子结点存储的是两个子节点中的胜者。这样看来，胜者树和堆的区别有点像B树和B+树的区别。一个是在非叶子节点中存储数据，另一个只存储索引。</p>
+<p>我们将开销问题放到后边讨论，现在先看胜者树的使用过程。首先我们要明确，胜者树的非叶子节点中存储的并不是数据，而是数据的index，一般可以理解为下标或者索引。通过这个下标可以直接访问到对应的叶子节点，免去了怎么从树顶到叶子遍历的烦恼。</p>
+<h6 id="简易流程"><a href="#简易流程" class="headerlink" title="简易流程"></a>简易流程</h6><p>和之前堆的场景一样，当我们将获胜条件设置为小的数据获胜时，我们在树顶得到了最小数的index，当我们尝试向树中更新一个数时，我们首先比较新的数是不是大于原先的最小的数。如果不大于当然就无事发生过。如果大于的话，我们将这个地方的数字替换成新的数字，并开始调整胜者树。</p>
+<p>调整的过程很简单直接判断更新的点和自己的兄弟点的关系，如果自己是胜者，就向上写父节点并向上更新。这样，胜者树在树的每一层只和兄弟节点进行了一次比较，和堆的两次比较相比，几乎减少了一半的比较时间。</p>
+<p>我们现在来考虑开销的事情。首先是空间开销。胜者树相比于同作用的堆，节点数量是堆的两倍左右（不会差太多）。由于二者都是完全二叉树，因此，二者的层数相差不超过1。因此，胜者树的调整次数和败者树相差不大，但是每次调整的时间开销相差一倍。</p>
+<h3 id="败者树"><a href="#败者树" class="headerlink" title="败者树"></a>败者树</h3><p>在胜者树中，从胜者到树顶的每一个元素都是胜者，那在胜者被取出并更新之后，整条路上的结果都需要更新。</p>
+<blockquote>
+<p>这是我的观点，在其他地方看到的说法是，在每一层的更新中，胜者树需要先获取父节点，再获取兄弟节点，然后再更新父节点。</p>
+</blockquote>
+<p>然后有了败者树这一胜者树的变体，败者树的思想是，父节点存储的是比较中的败者（不一定是较小者）。然后将胜者向上推进行比较。在树的最顶端还有一个额外的区域用来存储最终的胜者。理论上，所有的元素都应当出现在了某一个非叶子节点处（请自行理解，这里不过多解释）。在更新的时候，下层节点只需要和父节点进行比较，而不需要兄弟节点的任何信息。</p>
+<p>和胜者树的区别就在于，在每一次比较的时候，只需要更少的比较操作（取内存）。</p>
+<p>可以通过这样一个逻辑来理解败者树，当最终的胜者被修改了之后，他需要做的是把路上的每个败者都重新打败一遍。因此在每一轮他迫切需要的是上一轮的败者信息而不是胜者信息。因此，将败者存储下来是有意义的。</p>
+<p>不管是胜者树还是败者树，每次更新都需要从下往上遍历整个路径进行更新。因为在这两种树中，最终胜者的信息是从底到顶都存在的。</p>
+<h3 id="番外"><a href="#番外" class="headerlink" title="番外"></a>番外</h3><p>胜者树和败者树总的来看都是log N的复杂度。在这一点上，和堆相同。另一个不同的地方是堆可能在调整的过程中发现不需要再向下调整，因此调整的次数可能并不是想象中的log N而是小于等于这个值。这可能导致三者实际上的开销相仿。</p>
+<p>根据具体的场景使用最适合的数据结构，不正是程序员需要做的事情吗。</p>
+<p>本该昨天写的。昨天因为某些原因耽搁了，今天补上。</p>
+
       
     </div>
 
@@ -470,8 +467,8 @@ U2FsdGVkX19E2J7aXxSpR0xAYmfN2U4T5YOA7Ha0pSljPEHDagScRZ4t+zfEAZbZm1ERQnCeGRr4QZPc
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/26/leetcode之4sum/" rel="next" title="leetcode之4sum">
-                <i class="fa fa-chevron-left"></i> leetcode之4sum
+              <a href="/2019/09/26/移动语义和完美转发/" rel="next" title="移动语义和完美转发">
+                <i class="fa fa-chevron-left"></i> 移动语义和完美转发
               </a>
             
           </div>
@@ -479,10 +476,6 @@ U2FsdGVkX19E2J7aXxSpR0xAYmfN2U4T5YOA7Ha0pSljPEHDagScRZ4t+zfEAZbZm1ERQnCeGRr4QZPc
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/02/雪/" rel="prev" title="雪">
-                雪 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
